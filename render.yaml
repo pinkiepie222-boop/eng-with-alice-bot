@@ -1,0 +1,8 @@
+services:
+  - type: worker
+    name: eng_with_alice_bot
+    env: python
+    buildCommand: "pip install -r requirements.txt"
+    startCommand: "python subbot.py"
+    plan: free
+    autoDeploy: true
