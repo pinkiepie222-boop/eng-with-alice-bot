@@ -1,3 +1,4 @@
+import os
 import logging
 import uuid
 from datetime import datetime, timedelta
@@ -6,12 +7,16 @@ from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
 from aiogram.utils import executor
 from yookassa import Configuration, Payment
 import asyncio
+from dotenv import load_dotenv
 
-# Настройки
-API_TOKEN = "7762104848:AAGQIJYD4jkDEwldNFtXm9Mz92_uQ6f-0V8"
-CHANNEL_ID = -1001234567890  # Заменить на ID твоего закрытого канала
-Configuration.account_id = '1057082'
-Configuration.secret_key = 'live_WISCxkHzIljsgJHP5XgzzHItbVg5uFOXKSbVogS-fXs'
+# Загружаем переменные из .env, если запускается локально
+load_dotenv()
+
+# Настройки из переменных окружения
+API_TOKEN = os.environ["API_TOKEN"]
+CHANNEL_ID = int(os.environ["CHANNEL_ID"])
+Configuration.account_id = os.environ["YUKASSA_ACCOUNT_ID"]
+Configuration.secret_key = os.environ["YUKASSA_SECRET_KEY"]
 
 bot = Bot(token=API_TOKEN)
 dp = Dispatcher(bot)
@@ -76,7 +81,7 @@ async def show_subscription_options(message: types.Message):
 async def show_materials_shop(message: types.Message):
     markup = types.InlineKeyboardMarkup()
     markup.add(
-        types.InlineKeyboardButton("⭐️ Открыть каталог", url="https://t.me/engwithaliceshop")
+        types.InlineKeyboardButton("⭐️ Открыть каталог", url=os.environ.get("TELEGRAM_CHANNEL_URL", "https://t.me/engwithaliceshop"))
     )
     await message.answer(
         "✨ Здесь ты найдёшь каталог с авторскими шаблонами и стикерами для оформления уроков!\n"
@@ -141,6 +146,12 @@ async def check_expired_subscriptions():
                 except Exception as e:
                     logging.error(f"Не удалось удалить пользователя {user_id}: {e}")
         await asyncio.sleep(86400)  # проверка раз в сутки
+
+if __name__ == '__main__':
+    loop = asyncio.get_event_loop()
+    loop.create_task(check_expired_subscriptions())
+    executor.start_polling(dp, skip_updates=True)
+
 
 if __name__ == '__main__':
     loop = asyncio.get_event_loop()
