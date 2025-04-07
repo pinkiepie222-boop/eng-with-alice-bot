@@ -8,7 +8,7 @@ from yookassa import Configuration, Payment
 import asyncio
 
 # Настройки
-API_TOKEN = '7762104848:AAGQIJYD4jkDEwldNFtXm9Mz92_uQ6f-0V8'
+API_TOKEN = "7762104848:AAGQIJYD4jkDEwldNFtXm9Mz92_uQ6f-0V8"
 CHANNEL_ID = -1001234567890  # Заменить на ID твоего закрытого канала
 Configuration.account_id = '1057082'
 Configuration.secret_key = 'live_WISCxkHzIljsgJHP5XgzzHItbVg5uFOXKSbVogS-fXs'
